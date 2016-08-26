@@ -1,5 +1,6 @@
-<div ng-controller="PlaylistCtrl" class="well">
-  <form name="newPlaylistForm" class="form-horizontal" ng-submit="submit()">
+<div class="well">
+  <form name="newPlaylistForm" class="form-horizontal" ng-submit="submit(playlist.id)">
+  <pre>{{playlist.id}}</pre>
     <fieldset>
       <legend>New Playlist</legend>
       <div class="form-group">
