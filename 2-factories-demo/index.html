@@ -1,0 +1,83 @@
+<html>
+<head>
+  <script src="node_modules/angular/angular.js"></script>
+  <script>
+    var theModule = angular.module('fundBill', []);
+    theModule
+    // .controller('MainController', function ($scope) {
+    //   console.log("Main controller running");
+    //   $scope.cart = [];
+    // });
+    theModule
+    .controller('CartController', function ($scope, CartFactory) {
+      console.log("Cart controller running");
+      CartFactory.getCart()
+      .then(function(cart) {
+        $scope.cart = cart;
+      });
+      $scope.total = CartFactory.getTotal;
+    });
+    theModule
+    .controller('ProductsController', function ($scope, CartFactory) {
+      console.log("Products controller running");
+      $scope.products = [{
+        price: 100,
+        title: 'Younger Murray',
+        url: 'http://fillmurray.com/300/300'
+      }, {
+        price: 56,
+        title: 'Older Murray',
+        url: 'http://fillmurray.com/200/150'
+      }];
+
+      $scope.addSomething = CartFactory.addToCart;
+    });
+    theModule
+    .factory('CartFactory', function($http) {
+      var cart = [];
+      var totalPrice = 0;
+
+      console.log("CartFactory running");
+
+      return {
+        getCart: function() {
+          return $http.get('/api/cart')
+          .then(function(response) {
+            cart = response.data;
+            cart.forEach(function(item) {
+              totalPrice += item.price;
+            });
+            return response.data;
+          });
+        },
+        addToCart: function(item) {
+          return $http.post('/api/cart', item)
+          .then(function() {
+            totalPrice += item.price;
+            cart.push(item);
+          });
+        },
+        getTotal: function() {
+          return totalPrice;
+        }
+      };
+    });
+  </script>
+  <link href="https://npmcdn.com/basscss@7.1.1/css/basscss.min.css" rel="stylesheet">
+</head>
+<body class="m2" ng-app="fundBill">
+  <!-- <div ng-controller="MainController"> -->
+    <div ng-controller="CartController">
+      <span>You have {{ cart.length }} items in your cart - Total: ${{ total() }}</span>
+    </div>
+    <hr>
+    <div ng-controller="ProductsController">
+      <div ng-repeat="product in products">
+        <h3>"{{ product.title }}", ${{ product.price }}</h3>
+        <img ng-src="{{ product.url }}" class="mb1"/><br />
+        <button class="btn btn-outline" ng-click="addSomething(product)">Add to cart</button>
+      </div>
+    </div>
+  <!-- </div> -->
+</body>
+</html>

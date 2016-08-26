@@ -1,0 +1,52 @@
+<html>
+<head>
+  <script src="node_modules/angular/angular.js"></script>
+  <script src="theModule.js"></script>
+  <link href="https://npmcdn.com/basscss@7.1.1/css/basscss.min.css" rel="stylesheet">
+</head>
+<body class="m2" ng-app="fundBill">
+<div ng-controller="CartController">
+
+  <!-- Your Name Form Here -->
+  <pre ng>{{ user | json }}</pre>
+  <input ng-model="user.name" type="text" /><br />
+  <span>Hi {{ user.name }}, you have {{ cart.length }} items in your cart - Total: ${{ total() }}</span>
+</div>
+<hr>
+<div ng-controller="ProductsController">
+  <div ng-repeat="product in products">
+    <h3>"{{ product.title }}", ${{ product.price }}</h3>
+    <img ng-src="{{ product.url }}" class="mb1"/><br />
+    <button class="btn btn-outline" ng-click="addSomething(product)">Add to cart</button>
+  </div>
+
+  <!-- CC/address? Form Here -->
+  <hr class="mt2">
+  <div class="mt2">
+    <div class="mb2">
+      <button class="btn btn-outline" ng-click="showPayment()">Show $scope.paymentForm</button>
+      <button class="btn btn-outline" ng-click="showCard()">Show $scope.card</button>
+    </div>
+    <form name="paymentForm">
+
+      <pre ng-show="showPaymentScope">paymentForm (ngModelController): {{ paymentForm | json }}</pre>
+      <pre ng-show="showCardScope">card (ngModel): {{ card | json }}</pre>
+
+      <p ng-if="paymentForm.cardNum.$invalid && paymentForm.cardNum.$touched" class="red">You must enter a card number!</p>
+      <p ng-if="paymentForm.cardType.$invalid && paymentForm.cardType.$touched" class="red">You must choose a card type!</p>
+
+      <input name="cardNum" type="text" ng-model="card.num" class="mr1" required />
+
+      <select name="cardType" ng-model="card.type" class="field" required>
+        <option>Visa</option>
+        <option>Mastercard</option>
+        <option>American Express</option>
+      </select>
+
+      <button class="btn btn-outline" type="submit" ng-disabled="paymentForm.$invalid" ng-click="submit()">Submit</button>
+
+    </form>
+  </div>
+</div>
+</body>
+</html>
