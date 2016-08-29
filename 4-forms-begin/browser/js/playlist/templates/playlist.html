@@ -1,5 +1,25 @@
-<div>
+<div class="well">
   <h3>{{ playlist.name }}</h3>
+  <form name="newSongForm" class="form-horizontal" ng-submit="submit()">
+    <fieldset>
+      <legend>Add to Playlist</legend>
+      <div class="form-group">
+        <label class="col-xs-2 control-label">Song</label>
+        <div class="col-xs-10">
+          <select name="songSelection" ng-options="song as song.name for song in allSongs" ng-model="selected.song" required>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-xs-10 col-xs-offset-2">
+          <button type="submit" class="btn btn-success" ng-disabled="newSongForm.$invalid" ng-click="addSong(selected.song, playlist); newSongForm.$setPristine()">Add Song</button>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+</div>
+
+<div>
   <table class='table' ng-show="playlist.songs.length">
     <thead>
       <tr>
@@ -22,6 +42,5 @@
       </tr>
     </tbody>
   </table>
-  <small ng-hide="playlist.songs.length">No songs.</small>
   <hr>
 </div>
